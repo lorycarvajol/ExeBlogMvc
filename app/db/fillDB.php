@@ -98,26 +98,57 @@ for ($i = 0; $i < 288; $i++) {
            published='1'
    ");
 
-   $users[] = $pdo->lastInsertId();
+   $comments[] = $pdo->lastInsertId();
 }
 
 echo 'Commentaires créer,';
 
 //création categories
 
-for ($i = 0; $i < 288; $i++) {
+for ($i = 0; $i < 16; $i++) {
    
-        $pdo->exec("INSERT INTO comments
-        SET pseudo= '{$faker->username}',
+        $pdo->exec("INSERT INTO categories
+        SET 
                 title='{$faker->sentence(2)}',
-                email='{$faker->email}',
+                slug='{$faker->slug}',
                 content='{$faker->paragraphs(rand(3,15), true)}',           
-                created_at='{$faker->date} {$faker->time}',
-                published='1'
+                ft_image='image{$faker->numberBetween($min = 1, $max =5)}.jpg'
+                
         ");
      
-        $users[] = $pdo->lastInsertId();
+        $categories[] = $pdo->lastInsertId();
      }
      
      echo 'Commentaires créer,';
+
+//lier les articles avec une catégorie
+
+foreach($posts as $post) {
+        $randomCategories = $faker->randomElements($categories, rand(1,1));
+        foreach ($randomCategories as $category) {
+                $pdo->exec("INSERT INTO posts_categories SET post_id=$post, category_id=$category");
+        }
+}
+
+echo 'POSTS_CATEGORIES, ';
+
+//lier les articles au commentaires
+
+foreach($posts as $post) {
+        $randomComments = $faker->randomElements($comments, rand(2,2));
+        foreach ($randomComments as $comment) {
+                $pdo->exec("INSERT INTO posts_comments SET post_id=$post, comment_id=$comment");
+        }
+}
+
+echo 'POSTS_COMMENTS, ';
+
+//lier les articles avec l'Admin
+
+foreach($posts as $post) {
+           
+        $pdo->exec("INSERT INTO users_posts SET user_id='51', post_id=$post");       
+}
+
+echo 'USERS_POSTS, ont été créer avec talent !!!';
 
