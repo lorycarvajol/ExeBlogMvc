@@ -1,0 +1,123 @@
+<?php
+
+require dirname(__DIR__) .'../../vendor/autoload.php';
+
+$faker = Faker\Factory::create('fr_FR');
+
+require 'connDB.php';
+
+$posts = [];
+$categories = [];
+$comments = [];
+$users = [];
+
+//nettoyage des tables
+
+$pdo->exec("SET FOREIGN_KEY_CHECKS =  0");
+$pdo->exec("TRUNCATE TABLE posts_categories");
+$pdo->exec("TRUNCATE TABLE posts_comments");
+$pdo->exec("TRUNCATE TABLE users_posts");
+$pdo->exec("TRUNCATE TABLE posts");
+$pdo->exec("TRUNCATE TABLE users");
+$pdo->exec("TRUNCATE TABLE comments");
+$pdo->exec("TRUNCATE TABLE categories");
+$pdo->exec("SET FOREIGN_KEY_CHECKS =  1");
+
+echo 'Database Table successfully !';
+
+//création fake users
+
+$hashPassword = null;
+for ($i = 0; $i < 50; $i++) {
+   $hashPassword = password_hash($faker->password,  PASSWORD_BCRYPT);
+   $pdo->exec("INSERT INTO users
+   SET username= '{$faker->username}',
+           password='{$hashPassword}',
+           slug='{$faker->slug}',
+           ft_image='image{$faker->numberBetween($min = 1, $max =5)}.jpg',
+           content='{$faker->paragraphs(rand(3,15), true)}',
+           email='{$faker->email}',
+           phone='{$faker->e164PhoneNumber}',
+           role = 'Suscriber',
+           created_at='{$faker->date} {$faker->time}'
+   ");
+
+   $users[] = $pdo->lastInsertId();
+}
+
+echo 'Utilisateurs, ';
+
+//création Admin
+
+
+   $hashPassword = password_hash('test',  PASSWORD_BCRYPT);
+   $pdo->exec("INSERT INTO users
+   SET username= '{lorymvc}',
+           password='{$hashPassword}',
+           slug='{lorymvc}',
+           ft_image='image{$faker->numberBetween($min = 1, $max =5)}.jpg',
+           content='{$faker->paragraphs(rand(3,15), true)}',
+           email='{$faker->email}',
+           phone='{$faker->e164PhoneNumber}',
+           role = 'Admin',
+           created_at='{$faker->date} {$faker->time}'
+   ");
+
+   echo 'Admin, ';
+//création des posts
+
+$hashPassword = null;
+for ($i = 0; $i < 144; $i++) {
+   
+   $pdo->exec("INSERT INTO posts
+   SET user_id= '51',
+           title='{$faker->sentence(2)}',
+           slug='{$faker->slug}',
+           ft_image='image{$faker->numberBetween($min = 1, $max =5)}.jpg',
+           content='{$faker->paragraphs(rand(3,15), true)}',          
+           created_at='{$faker->date} {$faker->time}',
+           published='1'
+   ");
+
+   $posts[] = $pdo->lastInsertId();
+}
+
+echo 'Articles, ';
+
+//création des commentaires
+
+
+for ($i = 0; $i < 288; $i++) {
+   
+   $pdo->exec("INSERT INTO comments
+   SET pseudo= '{$faker->username}',
+           title='{$faker->sentence(2)}',
+           email='{$faker->email}',
+           content='{$faker->paragraphs(rand(3,15), true)}',           
+           created_at='{$faker->date} {$faker->time}',
+           published='1'
+   ");
+
+   $users[] = $pdo->lastInsertId();
+}
+
+echo 'Commentaires créer,';
+
+//création categories
+
+for ($i = 0; $i < 288; $i++) {
+   
+        $pdo->exec("INSERT INTO comments
+        SET pseudo= '{$faker->username}',
+                title='{$faker->sentence(2)}',
+                email='{$faker->email}',
+                content='{$faker->paragraphs(rand(3,15), true)}',           
+                created_at='{$faker->date} {$faker->time}',
+                published='1'
+        ");
+     
+        $users[] = $pdo->lastInsertId();
+     }
+     
+     echo 'Commentaires créer,';
+

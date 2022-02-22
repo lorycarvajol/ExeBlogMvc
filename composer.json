@@ -1,0 +1,17 @@
+{
+    "name": "loryc/exe-blog-mvc",
+    "autoload": {
+        "psr-4": {
+            "Loryc\\ExeBlogMvc\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "maclory73",
+            "email": "lory.carvajol997@gmail.com"
+        }
+    ],
+    "require": {
+        "fakerphp/faker": "^1.19"
+    }
+}
