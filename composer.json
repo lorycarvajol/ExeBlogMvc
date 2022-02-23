@@ -12,6 +12,8 @@
         }
     ],
     "require": {
-        "fakerphp/faker": "^1.19"
+        "fakerphp/faker": "^1.19",
+        "altorouter/altorouter": "^2.0",
+        "filp/whoops": "^2.14"
     }
 }
